@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import misc
+import imageio
 
 
 def load_images(image_path, view):
@@ -9,7 +10,7 @@ def load_images(image_path, view):
     :param view: L-CC / R-CC / L-MLO / R-MLO
     :return: Batch x Height x Width x Channels array
     """
-    image = misc.imread(image_path + view + '.png')
+    image = imageio.imread(image_path + view + '.png')
     image = image.astype(np.float32)
     normalize_single_image(image)
     image = np.expand_dims(image, axis=0)
