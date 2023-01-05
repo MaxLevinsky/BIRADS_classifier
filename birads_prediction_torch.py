@@ -1,11 +1,12 @@
 import argparse
 import torch
+import os
 
 import utils
 import models_torch as models
 
 
-def inference(parameters, verbose=True):
+def inference(img_path: str, device, verbose=True):
     """
     Function that creates a model, loads the parameters, and makes a prediction
     :param parameters: dictionary of parameters
@@ -14,19 +15,21 @@ def inference(parameters, verbose=True):
     """
     # resolve device
     device = torch.device(
-        "cuda:{}".format(parameters["gpu_number"]) if parameters["device_type"] == "gpu"
+        "cuda:{}".format(device) if device == "gpu"
         else "cpu"
     )
+    
+    image_path = os.path.join()
 
     # construct models
     model = models.BaselineBreastModel(device, nodropout_probability=1.0, gaussian_noise_std=0.0).to(device)
     model.load_state_dict(torch.load(parameters["model_path"]))
 
     # load input images and prepare data
-    datum_l_cc = utils.load_images(parameters['image_path'], 'L-CC')
-    datum_r_cc = utils.load_images(parameters['image_path'], 'R-CC')
-    datum_l_mlo = utils.load_images(parameters['image_path'], 'L-MLO')
-    datum_r_mlo = utils.load_images(parameters['image_path'], 'R-MLO')
+    datum_l_cc = utils.load_images(os.path.join(img_path, 'L-CC' + '.png'))
+    datum_r_cc = utils.load_images(os.path.join(img_path, 'R-CC' + '.png'))
+    datum_l_mlo = utils.load_images(os.path.join(img_path, 'L-MLO' + '.png'))
+    datum_r_mlo = utils.load_images(os.path.join(img_path, 'R-MLO' + '.png'))
     x = {
         "L-CC": torch.Tensor(datum_l_cc).permute(0, 3, 1, 2).to(device),
         "L-MLO": torch.Tensor(datum_l_mlo).permute(0, 3, 1, 2).to(device),
@@ -51,22 +54,22 @@ def inference(parameters, verbose=True):
     return prediction_birads[0]
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='Run Inference')
-    parser.add_argument('--model-path', default='saved_models/model.p')
-    parser.add_argument('--device-type', default="cpu")
-    parser.add_argument('--gpu-number', default=0, type=int)
-    parser.add_argument('--image-path', default="images/")
-    args = parser.parse_args()
+#     parser = argparse.ArgumentParser(description='Run Inference')
+#     parser.add_argument('--model-path', default='saved_models/model.p')
+#     parser.add_argument('--device-type', default="cpu")
+#     parser.add_argument('--gpu-number', default=0, type=int)
+#     parser.add_argument('--image-path', default="images/")
+#     args = parser.parse_args()
 
-    parameters_ = {
-        "model_path": args.model_path,
-        "device_type": args.device_type,
-        "gpu_number": args.gpu_number,
-        "image_path": args.image_path,
-        "input_size": (2600, 2000),
-    }
+#     parameters_ = {
+#         "model_path": args.model_path,
+#         "device_type": args.device_type,
+#         "gpu_number": args.gpu_number,
+#         "image_path": args.image_path,
+#         "input_size": (2600, 2000),
+#     }
 
-    # do a sample prediction
-    inference(parameters_)
+#     # do a sample prediction
+#     inference(parameters_)
