@@ -24,10 +24,10 @@ def inference(img_path: str, model_path: str, device, verbose=True):
     model.load_state_dict(torch.load(model_path))
 
     # load input images and prepare data
-    datum_l_cc = utils.load_images(os.path.join(img_path, 'L-CC' + '.png'))
-    datum_r_cc = utils.load_images(os.path.join(img_path, 'R-CC' + '.png'))
-    datum_l_mlo = utils.load_images(os.path.join(img_path, 'L-MLO' + '.png'))
-    datum_r_mlo = utils.load_images(os.path.join(img_path, 'R-MLO' + '.png'))
+    datum_l_cc = utils.load_images(img_path, 'L-CC')
+    datum_r_cc = utils.load_images(img_path, 'R-CC')
+    datum_l_mlo = utils.load_images(img_path, 'L-MLO')
+    datum_r_mlo = utils.load_images(img_path, 'R-MLO')
     x = {
         "L-CC": torch.Tensor(datum_l_cc).permute(0, 3, 1, 2).to(device),
         "L-MLO": torch.Tensor(datum_l_mlo).permute(0, 3, 1, 2).to(device),
