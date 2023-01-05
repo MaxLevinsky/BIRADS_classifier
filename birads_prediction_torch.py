@@ -6,7 +6,7 @@ import utils
 import models_torch as models
 
 
-def inference(img_path: str, device, verbose=True):
+def inference(img_path: str, model_path: str, device, verbose=True):
     """
     Function that creates a model, loads the parameters, and makes a prediction
     :param parameters: dictionary of parameters
@@ -21,7 +21,7 @@ def inference(img_path: str, device, verbose=True):
     
     # construct models
     model = models.BaselineBreastModel(device, nodropout_probability=1.0, gaussian_noise_std=0.0).to(device)
-    model.load_state_dict(torch.load(parameters["model_path"]))
+    model.load_state_dict(torch.load(model_path))
 
     # load input images and prepare data
     datum_l_cc = utils.load_images(os.path.join(img_path, 'L-CC' + '.png'))
