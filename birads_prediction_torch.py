@@ -19,8 +19,6 @@ def inference(img_path: str, device, verbose=True):
         else "cpu"
     )
     
-    image_path = os.path.join()
-
     # construct models
     model = models.BaselineBreastModel(device, nodropout_probability=1.0, gaussian_noise_std=0.0).to(device)
     model.load_state_dict(torch.load(parameters["model_path"]))
